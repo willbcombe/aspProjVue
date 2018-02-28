@@ -15,8 +15,12 @@
 <body>
     @RenderBody()
 
-    <script src="~/dist/vendor.js" asp-append-version="true"></script>
-    @RenderSection("scripts", required: false)
+    
+    @RenderSection("scripts", required: true)
 </body>
 
 </html>
+@section Scripts{ 
+  var controllerName = HttpContext.Current.Request.RequestContext.RouteData.Values["Controller"].ToString(); 
+   Scripts.Render("~/Scripts/app/" + controllerName + "/bundle.js")
+}

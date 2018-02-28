@@ -10,7 +10,7 @@
           type="text"
           class="form-control"
           placeholder="Enter your username"
-          v-model="credentials.username"
+          v-model="credentials.email"
         >
       </div>
       <div class="form-group">
@@ -21,6 +21,14 @@
           v-model="credentials.password"
         >
       </div>
+        <div class="form-group">
+        <input
+        id ="rmbr"
+          type="checkbox"
+          class="form-control"
+          v-model="credentials.remember"
+        ><label for='rmbr'>Remeember me?</label>
+      </div>
       <button class="btn btn-primary" @click="submit()">Access</button>
     </div>
   </template>
@@ -28,35 +36,38 @@
   <script>
  
   export default {
-    data() {
-      return {
+    data:{
+     
         // We need to initialize the component with any
         // properties that will be used in it
-        credentials: {
-          username: '',
-          password: ''
+        credentials :{
+          email: '',
+          password: '',
+          remember: false,
         },
-        error: ''
-      }
+        solution:[],
     },
     methods: {
-     async submit() {
+     onComplete: function() {
         var credentials = {
-          username: this.credentials.username,
-          password: this.credentials.password
+          email: this.credentials.email,
+          password: this.credentials.password,
+          remember: this.credentials.remember
         }
+
         // We need to pass the component's this context
         // to properly make use of http in the auth service
-        try {
-            let send = this.$http.post('/account/Account/Login')
-            console.log(send.data);
-            
-            let response = await this.$http.get('/account/Account/Login')
-            this.credentials = response.data;
-        } catch (error) {
-            console.log(error)
-        }
-      }
+       
+            let send = this.$http.post('/TokenAPI/Login', this.credentials)
+            .then(response =>{
+              this.solution = response.data;
+              console.log(this.solution);
+            });    
+           // let response = await this.$http.get('/account/Account/Login')
+           // this.credentials = response.data;
+    
+      },
     }
     
   }
+  </script>
